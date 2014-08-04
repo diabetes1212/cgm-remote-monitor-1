@@ -712,11 +712,21 @@
                 $('.container .current').toggleClass('high', current.y > 180).toggleClass('low', current.y < 70)
             }
             data = d[0].map(function (obj) { return { date: new Date(obj.x), sgv: scaleBg(obj.y), direction: obj.direction, color: 'grey'} });
-            // TODO: This is a kludge to advance the time as data becomes stale by making old predictor clear (using color = 'none')
-            // This shouldn't have to be sent and can be fixed by using xScale.domain([x0,x1]) function with
-            // 2 days before now as x0 and 30 minutes from now for x1 for context plot, but this will be
-            // required to happen when "now" event is sent from websocket.js every minute.  When fixed,
-            // remove all "color != 'none'" code
+            data = d[0].filter(function(obj) { return obj.y > 10; }).map(function (obj) {
+                var color = '';
+                switch (true) {
+                    case (obj.y > 180):
+                        color = 'yellow';
+                        break;
+                    case (obj.y >=70 && obj.y <= 180):
+                        color = 'green';
+                        break;
+                    case (obj.y < 70):
+                        color = 'red';
+                        break;
+                }
+                return { date: new Date(obj.x), sgv: obj.y, color: color}
+            });
             data = data.concat(d[1].map(function (obj) { return { date: new Date(obj.x), sgv: scaleBg(obj.y), color: 'none'} }));
             data = data.concat(d[2].map(function (obj) { return { date: new Date(obj.x), sgv: scaleBg(obj.y), color: 'red'} }));
 
