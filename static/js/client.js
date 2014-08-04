@@ -713,6 +713,21 @@
             }
         }
     });
+    data = d[0].filter(function(obj) { return obj.y > 10; }).map(function (obj) {
+                var color = '';
+                switch (true) {
+                    case (obj.y > 180):
+                        color = 'yellow';
+                        break;
+                    case (obj.y >=70 && obj.y <= 180):
+                        color = 'green';
+                        break;
+                    case (obj.y < 70):
+                        color = 'red';
+                        break;
+                }
+                return { date: new Date(obj.x), sgv: obj.y, color: color}
+            });
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
